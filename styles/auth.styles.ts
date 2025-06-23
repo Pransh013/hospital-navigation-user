@@ -6,13 +6,12 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.bgPrimary,
     paddingHorizontal: 16,
-    paddingVertical: 32,
+    justifyContent: "center",
   },
   title: {
     textAlign: "center",
     fontSize: 24,
     fontWeight: "500",
-    marginBottom: 20,
   },
   row: {
     flexDirection: "row",
@@ -57,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: theme.border, // gray-200
+    borderColor: theme.border,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 12,
@@ -65,7 +64,7 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   button: {
-    backgroundColor: theme.button, // blue-600
+    backgroundColor: theme.button,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",

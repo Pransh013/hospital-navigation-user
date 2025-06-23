@@ -9,4 +9,16 @@ export type FormInputProps = {
   keyboardType?: "default" | "phone-pad";
 };
 
-export type SigninForm = z.infer<typeof signinSchema>
+export type SigninForm = z.infer<typeof signinSchema>;
+
+export type TokenPayload = {
+  patientId: string;
+  email: string;
+  hospitalId: string;
+};
+
+export type SigninResponse = {
+  message: string;
+  token: string;
+  user: TokenPayload;
+};
