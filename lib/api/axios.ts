@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores/authStore";
 import axios from "axios";
 
-const API_URL = "http://192.168.65.253:8000/api/v1";
+const API_URL = "http://192.168.31.178:8000/api/v1";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -10,36 +10,25 @@ const axiosInstance = axios.create({
   },
 });
 
-let interceptorsAttached = false;
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const { token } = useAuthStore.getState();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-export const useApi = () => {
-  const { token, signout } = useAuthStore();
-
-  if (!interceptorsAttached) {
-    axiosInstance.interceptors.request.use(
-      async (config) => {
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-          console.log("token", token);
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    axiosInstance.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          console.warn("Unauthorized. Logging out.");
-          signout();
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    interceptorsAttached = true;
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().signout();
+    }
+    return Promise.reject(error);
   }
+);
 
-  return axiosInstance;
-};
+export const useApi = () => axiosInstance;

@@ -12,13 +12,14 @@ const TestCard = ({
   test: TestType;
   onMarkComplete: (testName: string) => void;
 }) => {
-  const isCompleted = test.testStatus === "Completed";
+  const isCompleted = test.testStatus === "test_completed";
   const formattedWaitingTime = formatWaitingTime(test.waitingTime);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleCardPress = () => {
     if (!isCompleted) {
-      setModalVisible(true);
+        setModalVisible(true);
+        
     }
   };
 

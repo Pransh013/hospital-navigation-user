@@ -6,7 +6,7 @@ import { Text, View } from "react-native";
 const TestProgress = ({ tests }: { tests: TestType[] }) => {
   const calculateCompletionDetails = (tests: TestType[]) => {
     const completedTests = tests.filter(
-      (test) => test.testStatus === "Completed"
+      (test) => test.testStatus === "test_completed"
     ).length;
     const totalTests = tests.length;
     return { completedTests, totalTests };

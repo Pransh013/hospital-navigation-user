@@ -1,37 +1,67 @@
 import Header from "@/components/Header";
 import TestCard from "@/components/TestCard";
 import TestProgress from "@/components/TestProgress";
-import { tests as initialTests } from "@/constants/data";
+import { useApiClient } from "@/lib/api/apiClient";
 import { useAuthStore } from "@/stores/authStore";
 import { homeStyles } from "@/styles/home.styles";
+import { TestType } from "@/types";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Home = () => {
-  const [tests, setTests] = useState(initialTests);
-  const { user } = useAuthStore();
+  const [tests, setTests] = useState<TestType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { user, token } = useAuthStore();
   const router = useRouter();
+  const { tests: testsApi } = useApiClient();
 
   const name = user?.firstName;
 
-  const handleMarkComplete = (testName: string) => {
-    setTests((prevTests) =>
-      prevTests.map((test) =>
-        test.testName === testName
-          ? {
-              ...test,
-              testStatus: "Completed",
-              waitingTime: null,
-              patientsInLine: 0,
-            }
-          : test
-      )
-    );
+  useEffect(() => {
+    const fetchTests = async () => {
+      setLoading(true);
+      try {
+        const data = await testsApi.fetchAll();
+        setTests(data.map((test: any) => ({ ...test, waitingTime: null })));
+      } catch (err) {
+        Alert.alert("Failed to fetch tests");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTests();
+  }, []);
+
+  const handleMarkComplete = async (patientTestId: string) => {
+    try {
+      await testsApi.markComplete(patientTestId);
+      setTests((prevTests) =>
+        prevTests.map((test) =>
+          test.patientTestId === patientTestId
+            ? {
+                ...test,
+                testStatus: "test_completed",
+                waitingTime: null,
+                patientsInLine: 0,
+              }
+            : test
+        )
+      );
+    } catch (err) {
+      Alert.alert("Failed to mark test as completed");
+    }
   };
 
   const allTestsCompleted = tests.every(
-    (test) => test.testStatus === "Completed"
+    (test) => test.testStatus === "test_completed"
   );
 
   return (
@@ -48,21 +78,29 @@ const Home = () => {
         </View>
         <TestProgress tests={tests} />
       </View>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={homeStyles.innerScrollView}
-      >
-        <View style={homeStyles.testsContainer}>
-          {tests.map((test, index) => (
-            <TestCard
-              onMarkComplete={handleMarkComplete}
-              key={index}
-              test={test}
-            />
-          ))}
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#3CC19A" />
         </View>
-      </ScrollView>
+      ) : (
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          style={homeStyles.innerScrollView}
+        >
+          <View style={homeStyles.testsContainer}>
+            {tests.map((test) => (
+              <TestCard
+                onMarkComplete={() => handleMarkComplete(test.patientTestId)}
+                key={test.patientTestId}
+                test={test}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      )}
       <TouchableOpacity
         onPress={() => {
           router.push("/");

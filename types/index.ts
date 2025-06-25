@@ -24,9 +24,18 @@ export type SigninResponse = {
   user: TokenPayload;
 };
 
+export type TestStatus =
+  | "assigned"
+  | "test_completed"
+  | "report_ready"
+  | "consultation_scheduled"
+  | "consultation_completed"
+  | "cancelled";
+
 export type TestType = {
+  patientTestId: string;
   testName: string;
-  testStatus: "Completed" | "Pending";
+  testStatus: TestStatus;
   waitingTime: string | null;
   floorNumber: number;
   roomNumber: number;
