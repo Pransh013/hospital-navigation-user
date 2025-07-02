@@ -1,5 +1,10 @@
 import { useAuthStore } from "@/stores/authStore";
-import { SigninResponse, TestStatus, TestType } from "@/types";
+import {
+  ConsultationSummary,
+  SigninResponse,
+  TestStatus,
+  TestType,
+} from "@/types";
 import { useMemo } from "react";
 import { useApi } from "./axios";
 
@@ -31,7 +36,7 @@ export const useApiClient = () => {
         fetchAll: async () => {
           try {
             const response = await axiosInstance.get<{
-              tests: Omit<TestType, "waitingTime">[];
+              tests: TestType[];
             }>("/tests");
             return response.data.tests;
           } catch (error: any) {
@@ -52,6 +57,21 @@ export const useApiClient = () => {
             const errorMessage =
               error?.response?.data?.message ||
               "Failed to mark test as completed";
+            throw new Error(errorMessage);
+          }
+        },
+      },
+      patient: {
+        getDetails: async (patientId: string) => {
+          try {
+            const response = await axiosInstance.get<ConsultationSummary>(
+              `/${patientId}/consultation`
+            );
+            return response.data;
+          } catch (error: any) {
+            const errorMessage =
+              error?.response?.data?.message ||
+              "Failed to fetch consultation details";
             throw new Error(errorMessage);
           }
         },

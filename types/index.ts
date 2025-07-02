@@ -24,20 +24,22 @@ export type SigninResponse = {
   user: TokenPayload;
 };
 
-export type TestStatus =
-  | "assigned"
-  | "test_completed"
-  | "report_ready"
-  | "consultation_scheduled"
-  | "consultation_completed"
-  | "cancelled";
+export type TestStatus = "assigned" | "test_completed" | "cancelled";
 
 export type TestType = {
   patientTestId: string;
   testName: string;
-  testStatus: TestStatus;
-  waitingTime: string | null;
+  testStatus: string;
   floorNumber: number;
-  roomNumber: number;
+  roomNumber: string;
+  duration: number;
   patientsInLine: number;
+};
+
+export type ConsultationSummary = {
+  doctorName: string;
+  doctorDesignation: string;
+  slotDate: string;
+  slotStartTime: string;
+  slotEndTime: string;
 };

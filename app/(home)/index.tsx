@@ -19,7 +19,7 @@ import {
 const Home = () => {
   const [tests, setTests] = useState<TestType[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const router = useRouter();
   const { tests: testsApi } = useApiClient();
 
@@ -30,8 +30,8 @@ const Home = () => {
       setLoading(true);
       try {
         const data = await testsApi.fetchAll();
-        setTests(data.map((test: any) => ({ ...test, waitingTime: null })));
-      } catch (err) {
+        setTests(data.map((test: any) => ({ ...test })));
+      } catch {
         Alert.alert("Failed to fetch tests");
       } finally {
         setLoading(false);
@@ -55,7 +55,7 @@ const Home = () => {
             : test
         )
       );
-    } catch (err) {
+    } catch {
       Alert.alert("Failed to mark test as completed");
     }
   };
@@ -103,7 +103,11 @@ const Home = () => {
       )}
       <TouchableOpacity
         onPress={() => {
-          router.push("/");
+          if (!user?.patientId) return;
+          router.push({
+            pathname: "/consultation/[patientId]",
+            params: { patientId: user.patientId },
+          });
         }}
         style={[
           homeStyles.proceedButton,

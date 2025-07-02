@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores/authStore";
 import axios from "axios";
 
-const API_URL = "http://192.168.31.178:8000/api/v1";
+const API_URL = "http://192.168.29.41:8000/api/v1";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,

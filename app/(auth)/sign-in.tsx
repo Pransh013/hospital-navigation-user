@@ -5,7 +5,6 @@ import { SigninForm } from "@/types";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -46,7 +45,7 @@ export default function SignIn() {
       router.replace("/");
     } catch (err: any) {
       setError([{ message: err.message || "Something went wrong" }]);
-      console.log(err)
+      console.log(err);
     } finally {
       setIsLoading(false);
     }

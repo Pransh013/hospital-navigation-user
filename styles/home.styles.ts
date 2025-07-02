@@ -57,8 +57,7 @@ export const testCardStyles = StyleSheet.create({
     justifyContent: "center",
   },
   testName: {
-    fontSize: 18,
-    fontFamily: "rubik-medium",
+    fontSize: 16,
   },
   statusRow: {
     flexDirection: "row",
@@ -90,12 +89,10 @@ export const testCardStyles = StyleSheet.create({
   },
   waitingTimeLabel: {
     color: "#71717A",
-    fontFamily: "rubik-light",
     fontSize: 14,
   },
   waitingTimeValue: {
     color: "#71717A",
-    fontFamily: "rubik-semibold",
     fontSize: 14,
   },
   rightSection: {
