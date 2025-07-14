@@ -42,4 +42,5 @@ export type ConsultationSummary = {
   slotDate: string;
   slotStartTime: string;
   slotEndTime: string;
+  consultationRequired?: boolean;
 };
