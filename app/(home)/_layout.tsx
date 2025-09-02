@@ -1,9 +1,18 @@
 import { useAuthStore } from "@/stores/authStore";
 import { Redirect } from "expo-router";
 import { Stack } from "expo-router/stack";
+import { ActivityIndicator, View } from "react-native";
 
 export default function Layout() {
-  const { isSignedIn } = useAuthStore();
+  const { isSignedIn, isHydrating } = useAuthStore();
+
+  if (isHydrating) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   if (!isSignedIn) {
     return <Redirect href={"/sign-in"} />;

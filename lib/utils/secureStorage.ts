@@ -1,26 +1,14 @@
 import * as SecureStore from "expo-secure-store";
+import { StateStorage } from "zustand/middleware";
 
-export const secureStorage = {
+export const secureStorage: StateStorage = {
   setItem: async (key: string, value: string) => {
-    try {
-      await SecureStore.setItemAsync(key, value);
-    } catch (err) {
-      console.error("SecureStore setItem error:", err);
-    }
+    await SecureStore.setItemAsync(key, value);
   },
   getItem: async (key: string) => {
-    try {
-      return await SecureStore.getItemAsync(key);
-    } catch (err) {
-      console.error("SecureStore getItem error:", err);
-      return null;
-    }
+    return await SecureStore.getItemAsync(key);
   },
   removeItem: async (key: string) => {
-    try {
-      await SecureStore.deleteItemAsync(key);
-    } catch (err) {
-      console.error("SecureStore removeItem error:", err);
-    }
+    await SecureStore.deleteItemAsync(key);
   },
 };

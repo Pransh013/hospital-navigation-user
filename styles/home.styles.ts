@@ -49,7 +49,10 @@ export const testCardStyles = StyleSheet.create({
   completedCard: {
     backgroundColor: "#CCFDE8",
   },
-  pendingCard: {
+  inQueueCard: {
+    backgroundColor: "#CCCDA8",
+  },
+  scheduledCard: {
     borderWidth: 1,
     borderColor: "#EB996E",
   },

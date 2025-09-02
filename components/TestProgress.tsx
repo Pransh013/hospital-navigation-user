@@ -1,12 +1,12 @@
 import { testProgressStyles } from "@/styles/home.styles";
-import { TestType } from "@/types";
+import { TestBooking } from "@/types";
 import React from "react";
 import { Text, View } from "react-native";
 
-const TestProgress = ({ tests }: { tests: TestType[] }) => {
-  const calculateCompletionDetails = (tests: TestType[]) => {
+export const TestProgress = ({ tests }: { tests: TestBooking[] }) => {
+  const calculateCompletionDetails = (tests: TestBooking[]) => {
     const completedTests = tests.filter(
-      (test) => test.testStatus === "test_completed"
+      (test) => test.status === "COMPLETED"
     ).length;
     const totalTests = tests.length;
     return { completedTests, totalTests };
@@ -32,5 +32,3 @@ const TestProgress = ({ tests }: { tests: TestType[] }) => {
     </View>
   );
 };
-
-export default TestProgress;

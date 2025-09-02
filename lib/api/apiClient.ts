@@ -1,29 +1,25 @@
 import { useAuthStore } from "@/stores/authStore";
-import {
-  ConsultationSummary,
-  SigninResponse,
-  TestStatus,
-  TestType,
-} from "@/types";
+import { HospitalResponse, SigninResponse, TestBookingResponse } from "@/types";
 import { useMemo } from "react";
 import { useApi } from "./axios";
+import { axiosPublic } from "./axiosPublic";
 
 export const useApiClient = () => {
   const axiosInstance = useApi();
-  const { signin, token } = useAuthStore();
+  const authState = useAuthStore();
 
   return useMemo(
     () => ({
-      auth: {
-        signin: async (email: string, password: string) => {
+      patient: {
+        signin: async (email: string, password: string, hospitalId: string) => {
           try {
-            const response = await axiosInstance.post<SigninResponse>(
-              "/auth/signin",
-              { email, password }
+            const response = await axiosPublic.post<SigninResponse>(
+              "/patient/sign-in",
+              { email, password, hospitalId }
             );
 
-            const { message, token, user } = response.data;
-            signin(token, user);
+            const { message, data } = response.data;
+            authState.signin(data.token, data.patient);
             return message;
           } catch (error: any) {
             const errorMessage =
@@ -31,52 +27,46 @@ export const useApiClient = () => {
             throw new Error(errorMessage);
           }
         },
-      },
-      tests: {
-        fetchAll: async () => {
+        getBookings: async (date: string) => {
           try {
-            const response = await axiosInstance.get<{
-              tests: TestType[];
-            }>("/tests");
-            return response.data.tests;
-          } catch (error: any) {
-            const errorMessage =
-              error?.response?.data?.message || "Failed to fetch tests";
-            throw new Error(errorMessage);
-          }
-        },
-
-        markComplete: async (id: string) => {
-          try {
-            const response = await axiosInstance.patch<{
-              message: string;
-              status: TestStatus;
-            }>(`/tests/${id}/complete`);
-            return response.data;
-          } catch (error: any) {
-            const errorMessage =
-              error?.response?.data?.message ||
-              "Failed to mark test as completed";
-            throw new Error(errorMessage);
-          }
-        },
-      },
-      patient: {
-        getDetails: async (patientId: string) => {
-          try {
-            const response = await axiosInstance.get<ConsultationSummary>(
-              `/${patientId}/consultation`
+            const response = await axiosInstance.get<TestBookingResponse>(
+              `/patient/bookings?date=${date}`
             );
             return response.data;
           } catch (error: any) {
             const errorMessage =
-              error?.response?.data?.message ||
-              "Failed to fetch consultation details";
+              error?.response?.data?.message || "Failed to fetch bookings";
+            throw new Error(errorMessage);
+          }
+        },
+        checkIn: async (patientId: string) => {
+          try {
+            const response = await axiosInstance.post(
+              `/patient/${patientId}/checkin`
+            );
+            return response.data.data;
+          } catch (error: any) {
+            const errorMessage =
+              error?.response?.data?.message || "Failed to check in";
+            throw new Error(errorMessage);
+          }
+        },
+      },
+      hospital: {
+        fetchAll: async () => {
+          try {
+            const response = await axiosPublic.get<HospitalResponse>(
+              "/hospital"
+            );
+            return response.data;
+          } catch (error: any) {
+            const errorMessage =
+              error?.response?.data?.message || "Failed to fetch hospitals";
             throw new Error(errorMessage);
           }
         },
       },
     }),
-    [axiosInstance, token]
+    [axiosInstance, authState]
   );
 };

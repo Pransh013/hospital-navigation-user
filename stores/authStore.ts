@@ -1,39 +1,30 @@
 import { secureStorage } from "@/lib/utils/secureStorage";
-import { TokenPayload } from "@/types";
-import * as SecureStore from "expo-secure-store";
+import { AuthState } from "@/types";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-type AuthState = {
-  token: string | null;
-  user: TokenPayload | null;
-  isSignedIn: boolean;
-  signin: (token: string, user: TokenPayload) => void;
-  signout: () => void;
-};
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       token: null,
-      user: null,
+      patient: null,
       isSignedIn: false,
+      isHydrating: true,
 
-      signin: (token, user) => set({ token, user, isSignedIn: true }),
+      signin: (token, patient) => set({ token, patient, isSignedIn: true }),
 
       signout: () => {
-        set({ token: null, user: null, isSignedIn: false });
-        SecureStore.deleteItemAsync("auth-storage");
+        set({ token: null, patient: null, isSignedIn: false });
       },
     }),
     {
       name: "auth-storage",
       storage: createJSONStorage(() => secureStorage),
-      partialize: (state) => ({
-        token: state.token,
-        user: state.user,
-        isSignedIn: state.isSignedIn,
-      }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.isHydrating = false;
+        }
+      },
     }
   )
 );
