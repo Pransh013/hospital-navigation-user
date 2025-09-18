@@ -74,11 +74,40 @@ export type TestBookingResponse = {
   data: TestBooking[];
 };
 
-export type ConsultationSummary = {
-  doctorName: string;
-  doctorDesignation: string;
-  slotDate: string;
-  slotStartTime: string;
-  slotEndTime: string;
-  consultationRequired?: boolean;
+export type Doctor = {
+  name: string;
+  imageKey?: string;
+  specializations: string[];
+};
+
+export type AppointmentStatus =
+  | "SCHEDULED"
+  | "CANCELLED"
+  | "COMPLETED"
+  | "NO_SHOW";
+
+export type AppointmentListItem = {
+  id: string;
+  scheduledAt: string;
+  status: AppointmentStatus;
+};
+
+export type AppointmentListResponse = {
+  message: string;
+  status: number;
+  data: AppointmentListItem[];
+};
+
+export type Appointment = {
+  id: string;
+  scheduledAt: string;
+  status: AppointmentStatus;
+  notes?: string;
+  doctor: Doctor;
+};
+
+export type AppointmentResponse = {
+  message: string;
+  status: number;
+  data: Appointment;
 };

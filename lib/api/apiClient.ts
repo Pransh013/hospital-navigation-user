@@ -1,5 +1,11 @@
 import { useAuthStore } from "@/stores/authStore";
-import { HospitalResponse, SigninResponse, TestBookingResponse } from "@/types";
+import {
+  AppointmentListResponse,
+  AppointmentResponse,
+  HospitalResponse,
+  SigninResponse,
+  TestBookingResponse,
+} from "@/types";
 import { useMemo } from "react";
 import { useApi } from "./axios";
 import { axiosPublic } from "./axiosPublic";
@@ -36,6 +42,30 @@ export const useApiClient = () => {
           } catch (error: any) {
             const errorMessage =
               error?.response?.data?.message || "Failed to fetch bookings";
+            throw new Error(errorMessage);
+          }
+        },
+        getAppontments: async () => {
+          try {
+            const response = await axiosInstance.get<AppointmentListResponse>(
+              "/patient/appointments"
+            );
+            return response.data;
+          } catch (error: any) {
+            const errorMessage =
+              error?.response?.data?.message || "Failed to fetch appointments";
+            throw new Error(errorMessage);
+          }
+        },
+        getAppontmentById: async (id: string) => {
+          try {
+            const response = await axiosInstance.get<AppointmentResponse>(
+              `/patient/appointments/${id}`
+            );
+            return response.data;
+          } catch (error: any) {
+            const errorMessage =
+              error?.response?.data?.message || "Failed to fetch appointment";
             throw new Error(errorMessage);
           }
         },

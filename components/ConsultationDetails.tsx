@@ -22,7 +22,7 @@ const ConsultationDetails = ({
           <Text style={consultationDetailsStyles.label}>Time</Text>
           <View style={consultationDetailsStyles.timeRow}>
             <Text style={consultationDetailsStyles.value}>{startTime}</Text>
-            <Text style={consultationDetailsStyles.toText}>to</Text>
+            <Text style={consultationDetailsStyles.toText}>-</Text>
             <Text style={consultationDetailsStyles.value}>{endTime}</Text>
           </View>
         </View>

@@ -78,23 +78,24 @@ export const consultationScreenStyles = StyleSheet.create({
   buttonTitle: {
     color: "#fff",
   },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export const consultationDetailsStyles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingBottom: 16,
   },
   detailContainer: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    // borderWidth: 2,
+    paddingBottom: 10,
   },
   detailItem: {
     justifyContent: "center",
@@ -103,12 +104,12 @@ export const consultationDetailsStyles = StyleSheet.create({
   label: {
     color: "#71717A",
     fontFamily: "Rubik-Medium",
-    fontSize: 18,
+    fontSize: 13,
   },
   value: {
     color: "#3CC19A",
     fontFamily: "Rubik-SemiBold",
-    fontSize: 20,
+    fontSize: 14,
   },
   divider: {
     height: "83%",
@@ -124,8 +125,7 @@ export const consultationDetailsStyles = StyleSheet.create({
   toText: {
     color: "#71717A",
     fontFamily: "Rubik-Regular",
-    fontSize: 16,
-    marginHorizontal: 4,
+    fontSize: 13,
   },
 });
 
